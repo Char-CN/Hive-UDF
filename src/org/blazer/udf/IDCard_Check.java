@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hive.ql.exec.UDF;
 
 @SuppressWarnings("unused")
-public class IDCard_Bol extends IDCard {
+public class IDCard_Check extends IDCard {
 
 	public boolean evaluate(String idcard) throws Exception {
 		if (StringUtils.isBlank(idcard)) {
