@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<project default="jar" name="HiveUDF">
+	<!-- 工程目录结构
+    project
+        |-bin
+        |-src
+        |-resouce
+        |-lib
+        |-extlib
+        |-doc
+        |-out
+        |-build.xml
+    -->
+	<property name="lib.dir" value="lib" />
+	<property name="src.dir" value="src" />
+	<property name="classes.dir" value="build" />
+
+	<property name="output.dir" value="out" />
+	<property name="name" value="hive-udf" />
+	<property name="version" value="0.0.1" />
+	<property name="mainclass" value="org.blazer.udf.IDCard_Check" />
+
+	<!-- 第三方jar包的路径 -->
+	<path id="lib-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean" description="clean up">
+		<delete dir="${classes.dir}" />
+		<delete dir="${output.dir}" />
+	</target>
+
+	<!-- 1. 初始化工作，如创建目录等 -->
+	<target name="init" depends="clean">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${output.dir}" />
+	</target>
+
+	<!-- 2. 编译 -->
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="on" encoding="utf-8">
+			<classpath refid="lib-classpath" />
+			<compilerarg line="-g:lines,vars,source" />
+		</javac>
+	</target>
+
+	<!-- 3. 打包jar文件 -->
+	<target name="jar" depends="compile">
+		<copy todir="${output.dir}/${lib.dir}">
+			<fileset dir="${lib.dir}" />
+		</copy>
+
+		<!--Create a property containing all .jar files, prefix lib/, and seperated with a space-->
+		<pathconvert property="mf.classpath" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<!-- jar包文件只留文件名，去掉目录信息 -->
+					<flattenmapper />
+					<!-- add lib/ prefix -->
+					<globmapper from="*" to="lib/*" />
+				</chainedmapper>
+			</mapper>
+			<path refid="lib-classpath" />
+		</pathconvert>
+
+		<jar destfile="${output.dir}/${name}.jar" basedir="${classes.dir}">
+			<manifest>
+				<!--
+				<attribute name="Main-class" value="${mainclass}" />
+				-->
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
+
+		<zip destfile="${output.dir}/${name}-${version}.zip" basedir="${output.dir}" />
+	</target>
+</project>
