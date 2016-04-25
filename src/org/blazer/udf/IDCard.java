@@ -1,9 +1,5 @@
 package org.blazer.udf;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,11 +12,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hive.ql.exec.UDF;
 
-@SuppressWarnings("unused")
 public class IDCard extends UDF {
 
-	private static final Map<String, String> cityCodeMap = new HashMap<String, String>() {
-		private static final long serialVersionUID = 1L;
+	protected static final Map<String, String> cityCodeMap = new HashMap<String, String>() {
+		private static final long serialVersionUID = 2076194113075171311L;
 		{
 			this.put("11", "北京");
 			this.put("12", "天津");
@@ -81,7 +76,7 @@ public class IDCard extends UDF {
 	private static final int power[] = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 };
 
 	// 第18位校检码
-	private static final String verifyCode[] = { "1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2" };
+//	private static final String verifyCode[] = { "1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2" };
 
 	/**
 	 * 验证所有的身份证的合法性
