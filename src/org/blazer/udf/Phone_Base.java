@@ -10,7 +10,8 @@ public class Phone_Base extends UDF {
 
 	protected boolean isNumber(String number) {
 		// 连号
-		if (StringUtils.isBlank(number) || Pattern.matches(compareNumber, number)) {
+//		if (StringUtils.isBlank(number) || Pattern.matches(compareNumber, number)) {
+		if (StringUtils.isBlank(number)) {
 			return false;
 		}
 		// 手机号
@@ -35,7 +36,8 @@ public class Phone_Base extends UDF {
 
 	protected boolean isMobileNumber(String number) {
 		// 连号
-		if (StringUtils.isBlank(number) || number.length() != 11 || Pattern.matches(compareNumber, number)) {
+//		if (StringUtils.isBlank(number) || number.length() != 11 || Pattern.matches(compareNumber, number)) {
+		if (StringUtils.isBlank(number) || number.length() != 11) {
 			return false;
 		}
 		// 手机号
@@ -47,7 +49,8 @@ public class Phone_Base extends UDF {
 
 	protected boolean isTelNumber(String number) {
 		// 连号
-		if (StringUtils.isBlank(number) || Pattern.matches(compareNumber, number)) {
+//		if (StringUtils.isBlank(number) || Pattern.matches(compareNumber, number)) {
+		if (StringUtils.isBlank(number)) {
 			return false;
 		}
 		// 电话号
@@ -122,6 +125,7 @@ public class Phone_Base extends UDF {
 	}
 
 	// TODO: 连号
+	@SuppressWarnings("unused")
 	private final String compareNumber = "\\d*(1{7}|2{7}|3{7}|4{7}|5{7}|6{7}|7{7}|8{7}|9{7}|0{7})\\d*";
 
 	// TODO: 类似010三位区号
