@@ -7,57 +7,49 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 
 public class IDCard_GetAge extends UDF {
 
-	public static final String DEFAULT = "yyyy-MM-dd hh:mm:ss";
-
-	public String evaluate(String idcard) throws Exception {
-		return evaluate(idcard, DEFAULT);
-	}
-
-	@SuppressWarnings("unused")
-	public String evaluate(String idcard, String format) throws Exception {
+	public Integer evaluate(String idcard) throws Exception {
+		String birthday = null;
 		if (StringUtils.isBlank(idcard)) {
 			return null;
-		} else if (idcard.length() == 18) {
-			int birthday = 0;
+		}
+		if (idcard.length() == 18) {
 			try {
-				birthday = Integer.parseInt(idcard.substring(6, 14));
+				birthday = "" + Integer.parseInt(idcard.substring(6, 14));
 			} catch (Exception e) {
-				return null;
 			}
-			
+
 		} else if (idcard.length() == 15) {
-			String birthday = idcard.substring(6, 12);
 			try {
-				Integer.parseInt(birthday);
+				birthday = "19" + Integer.parseInt(idcard.substring(6, 12));
 			} catch (Exception e) {
-				return null;
 			}
 		}
-		return null;
+		if (birthday == null) {
+			return null;
+		}
+		return calcAge(birthday);
 	}
 
 	public static void main(String[] args) throws Exception {
 		IDCard_GetAge s = new IDCard_GetAge();
-		System.out.println(s.evaluate("130503670401001"));
-		System.out.println(s.evaluate("130503670401001", "yyyyMMdd"));
-		System.out.println(s.evaluate("43021119900702041X"));
-		System.out.println(s.evaluate("43021119900702041X", "yyyyMMdd"));
-
-		Calendar c = Calendar.getInstance();
-		String y = "" + c.get(Calendar.YEAR);
-		int m = c.get(Calendar.MONTH);
-		int d = c.get(Calendar.DAY_OF_MONTH);
-		
-		int today = Integer.parseInt(y + (m < 10 ? "0" + m : m) + (d < 10 ? "0" + d : d));
-		
-		System.out.println();
-		System.out.println(calcAge(19900702, today));
+		System.out.println(s.evaluate("130503900509001"));
+		System.out.println(s.evaluate("130503900101001"));
+		System.out.println(s.evaluate("130503901231001"));
 	}
 
-	private static int calcAge(int birthday, int today) {
-		if (today - birthday < 10000)
-			return 0;
-		return (today - birthday) / 10000;
+	private static int calcAge(String birthday) {
+		Integer birthYear = Integer.parseInt(birthday.substring(0, 4));
+		Integer birthMonth = Integer.parseInt(birthday.substring(4, 6));
+		Integer birthDay = Integer.parseInt(birthday.substring(6, 8));
+		Calendar c = Calendar.getInstance();
+		int nowYear = c.get(Calendar.YEAR);
+		int nowMonth = c.get(Calendar.MONTH) + 1;
+		int nowDay = c.get(Calendar.DAY_OF_MONTH);
+		int add = 0;
+		if (birthMonth < nowMonth || (birthMonth == nowMonth && birthDay <= nowDay)) {
+			add = -1;
+		}
+		return nowYear - birthYear + add;
 	}
 
 }
